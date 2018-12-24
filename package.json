@@ -1,0 +1,22 @@
+{
+  "name": "nostroflix",
+  "version": "1.0.0",
+  "description": "Nostroflix [backend : node js - express - mongoDB - mongoose - RestFul API]/[frontend : vue js - materialize - PWA]",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/0mounach0/nostroflix.git"
+  },
+  "author": "Mouad MOUNACH",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/0mounach0/nostroflix/issues"
+  },
+  "homepage": "https://github.com/0mounach0/nostroflix#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
