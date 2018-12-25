@@ -19,8 +19,13 @@ router.get('/:id',(req, res, next) => {
 
 //----post----
 router.post('/',(req, res, next) => {
+    const film = {
+        name: req.body.name,
+        description: req.body.description
+    }
     res.status(200).json({
-        message: 'post request to /films'
+        message: 'post request to /films',
+        createdFilm: film
     });
 });
 

@@ -19,12 +19,17 @@ router.get('/:id',(req, res, next) => {
 
 //----post----
 router.post('/',(req, res, next) => {
+    const categorie = {
+        name: req.body.name,
+        description: req.body.description
+    }
     res.status(200).json({
-        message: 'post request to /categories'
+        message: 'post request to /categories',
+        createdCategorie: categorie
     });
 });
 
-//----put----
+//----put-----
 router.put('/:id',(req, res, next) => {
     res.status(200).json({
         message: 'put request to /categories/'+req.params.id,
