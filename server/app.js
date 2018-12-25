@@ -8,9 +8,21 @@ const morgan = require('morgan');
 // Body-parser
 const bodyParser = require('body-parser');
 
+// Mongoose
+const mongoose = require('mongoose');
+
 //---------
 const filmsRoutes = require('./api/routes/films');
 const categoriesRoutes = require('./api/routes/categories');
+
+// MongoDB atlas connection
+mongoose.connect(
+    'mongodb+srv://mounach:' +
+    process.env.MONGO_ATLAS_PASSWORD + 
+    '@nostroflix-butgu.mongodb.net/test?retryWrites=true',
+    {
+        useMongoClient: true
+    });
 
 //------------------ Middlewares ----------------
 
