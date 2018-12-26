@@ -72,10 +72,23 @@ router.post('/',(req, res, next) => {
 
 //----put----
 router.put('/:id',(req, res, next) => {
-    res.status(200).json({
-        message: 'put request to /films/'+req.params.id,
-        filmId: req.params.id
-    });
+    const id = req.params.id;
+    const updateOps = {};
+    for(const ops of req.body) {
+        updateOps[ops.propName] = ops.value;
+    }
+    Film.update({_id: id}, { $set: updateOps})
+        .exec()
+        .then(result => {
+            console.log(result);
+            res.status(200).json(result);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
 });
 
 //----delete----
