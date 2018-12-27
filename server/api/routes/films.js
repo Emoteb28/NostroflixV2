@@ -17,11 +17,7 @@ router.get('/',(req, res, next) => {
                   return {
                     _id: doc._id,
                     name: doc.name,
-                    description: doc.description,
-                    request: {
-                      type: "GET",
-                      url: "http://localhost:3000/films/" + doc._id
-                    }
+                    description: doc.description
                   };
                 })
               };
@@ -45,11 +41,7 @@ router.get('/:id',(req, res, next) => {
             console.log("From database", doc);
             if (doc) {
                 res.status(200).json({
-                    film: doc,
-                    request: {
-                        type: 'GET',
-                        url: 'http://localhost:3000/films'
-                    }
+                    film: doc
                 });
             } else {
                 res.status(400).json({
@@ -81,11 +73,7 @@ router.post('/',(req, res, next) => {
                 createdFilm: {
                     _id: result._id,
                     name: result.name,
-                    description: result.description,
-                    request: {
-                        type: 'GET',
-                        url: "http://localhost:3000/films/" + result._id
-                    }
+                    description: result.description
                 }
             });
         })
