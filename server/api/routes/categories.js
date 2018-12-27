@@ -8,10 +8,20 @@ const Categorie = require('../models/categorie');
 //---get all----
 router.get('/',(req, res, next) => {
     Categorie.find()
+        .select("_id name description")
         .exec()
         .then(docs => {
-            console.log(docs);
-            res.status(200).json(docs);
+            const response = {
+                count: docs.length,
+                categories: docs.map(doc => {
+                  return {
+                    _id: doc._id,
+                    name: doc.name,
+                    description: doc.description
+                  };
+                })
+              };
+            res.status(200).json(response);
         })
         .catch(err => {
             console.log(err);
@@ -25,11 +35,14 @@ router.get('/',(req, res, next) => {
 router.get('/:id',(req, res, next) => {
     const id = req.params.id;
     Categorie.findById(id)
+        .select("_id name description")
         .exec()
         .then(doc => {
-            console.log(doc);
+            console.log("From database", doc);
             if (doc) {
-                res.status(200).json(doc);
+                res.status(200).json({
+                    categorie: doc
+                });
             } else {
                 res.status(400).json({
                     message: 'No valide entry found for provided ID'
@@ -55,9 +68,13 @@ router.post('/',(req, res, next) => {
         .save()
         .then(result => {
             console.log(result);
-            res.status(200).json({
-                message: 'post request to /categories',
-                createdCategorie: result
+            res.status(201).json({
+                message: 'Categorie created successfully',
+                createdCategorie: {
+                    _id: result._id,
+                    name: result.name,
+                    description: result.description
+                }
             });
         })
         .catch(err => {
@@ -80,8 +97,9 @@ router.put('/:id',(req, res, next) => {
     Categorie.update({_id: id}, { $set: updateOps})
         .exec()
         .then(result => {
-            console.log(result);
-            res.status(200).json(result);
+            res.status(200).json({
+                message: 'Categorie updated'
+            });
         })
         .catch(err => {
             console.log(err);
@@ -97,7 +115,9 @@ router.delete('/:id',(req, res, next) => {
     Categorie.remove({_id: id})
         .exec()
         .then(result => {
-            res.status(200).json(result);
+            res.status(200).json({
+                message: 'Categorie deleted'
+            });
         })
         .catch(err => {
             console.log(err);
