@@ -12,8 +12,8 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 //---------
-const filmsRoutes = require('./api/routes/films');
-const categoriesRoutes = require('./api/routes/categories');
+const filmsRoutes = require('./api/routes/filmRoutes');
+const categoriesRoutes = require('./api/routes/categorieRoutes');
 
 // MongoDB atlas connection
 // mongoose.connect(
