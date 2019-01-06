@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 module.exports = {
   getAll: async (req, res, next) => {
     Categorie.find()
-        .select("_id name description")
+        .select("_id name description films")
         .exec()
         .then(docs => {
             const response = {
@@ -15,7 +15,8 @@ module.exports = {
                   return {
                     _id: doc._id,
                     name: doc.name,
-                    description: doc.description
+                    description: doc.description,
+                    films: doc.films
                   };
                 })
               };
@@ -31,7 +32,7 @@ module.exports = {
     getOne: async (req, res, next) => {
         const id = req.params.id;
         Categorie.findById(id)
-            .select("_id name description")
+            .select("_id name description films")
             .exec()
             .then(doc => {
                 console.log("From database", doc);

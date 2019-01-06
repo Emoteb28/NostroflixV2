@@ -27,7 +27,8 @@ const categoriesRoutes = require('./api/routes/categorieRoutes');
 mongoose.connect(
     'mongodb://localhost/nostroflix',
         {
-            useNewUrlParser: true
+            useNewUrlParser: true,
+            useFindAndModify: false
         });
 
 //------------------ Middlewares ----------------

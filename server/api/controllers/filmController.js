@@ -1,4 +1,5 @@
 const Film = require('../models/film');
+const Categorie = require('../models/categorie');
 
 //---
 const mongoose = require('mongoose');
@@ -6,7 +7,7 @@ const mongoose = require('mongoose');
 module.exports = {
   getAll: async (req, res, next) => {
     Film.find()
-        .select("_id name description")
+        .select("_id name description categories")
         .exec()
         .then(docs => {
             const response = {
@@ -15,7 +16,8 @@ module.exports = {
                   return {
                     _id: doc._id,
                     name: doc.name,
-                    description: doc.description
+                    description: doc.description,
+                    categories: doc.categories
                   };
                 })
               };
@@ -31,7 +33,7 @@ module.exports = {
     getOne: async (req, res, next) => {
         const id = req.params.id;
         Film.findById(id)
-            .select("_id name description")
+            .select("_id name description categories")
             .exec()
             .then(doc => {
                 console.log("From database", doc);
@@ -55,7 +57,7 @@ module.exports = {
             _id: new mongoose.Types.ObjectId(),
             name: req.body.name,
             description: req.body.description,
-            categories: []
+            categories: req.body.categories
         });
     
         film
@@ -70,6 +72,23 @@ module.exports = {
                         description: result.description
                     }
                 });
+
+                //-------
+                result.categories.forEach(cat => {
+                    Categorie.findByIdAndUpdate(cat._id,{
+                        $push: { films: result }
+                    })
+                    .exec()
+                    .then(data => {
+                        console.log(data);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        res.status(500).json({
+                            error: err
+                        });
+                    });
+                });
             })
             .catch(err => {
                 console.log(err);
@@ -77,6 +96,8 @@ module.exports = {
                     error: err
                 });
             });
+
+            
     },
     updateFilm: async (req, res, next) => {
         const id = req.params.id;
