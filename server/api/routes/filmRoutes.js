@@ -13,8 +13,8 @@ router.get('/:id', filmController.getOne);
 //----post----
 router.post('/', filmController.newFilm);
 
-//----put-----
-router.put('/:id', filmController.updateFilm);
+//----patch-----
+router.patch('/:id', filmController.updateFilm);
 
 //----delete----
 router.delete('/:id', filmController.deleteFilm);

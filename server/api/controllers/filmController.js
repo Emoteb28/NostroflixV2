@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 module.exports = {
   getAll: async (req, res, next) => {
     Film.find()
+        .populate('categories','_id name description')
         .select("_id name description categories")
         .exec()
         .then(docs => {
@@ -33,6 +34,7 @@ module.exports = {
     getOne: async (req, res, next) => {
         const id = req.params.id;
         Film.findById(id)
+            .populate('categories','_id name description')
             .select("_id name description categories")
             .exec()
             .then(doc => {
@@ -100,12 +102,7 @@ module.exports = {
             
     },
     updateFilm: async (req, res, next) => {
-        const id = req.params.id;
-        const updateOps = {};
-        for(const ops of req.body) {
-            updateOps[ops.propName] = ops.value;
-        }
-        Film.update({_id: id}, { $set: updateOps})
+        Film.findByIdAndUpdate(req.params.id, req.body)
             .exec()
             .then(result => {
                 res.status(200).json({
@@ -120,8 +117,7 @@ module.exports = {
             });
     },
     deleteFilm: async (req, res, next) => {
-        const id = req.params.id;
-        Film.remove({_id: id})
+        Film.findByIdAndRemove(req.params.id)
             .exec()
             .then(result => {
                 res.status(200).json({
