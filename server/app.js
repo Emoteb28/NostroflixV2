@@ -16,13 +16,13 @@ const filmsRoutes = require('./api/routes/filmRoutes');
 const categoriesRoutes = require('./api/routes/categorieRoutes');
 
 // MongoDB atlas connection
-// mongoose.connect(
-//     'mongodb://mounach:' +
-//     process.env.MONGO_ATLAS_PASSWORD + 
-//     '@nostroflix-shard-00-00-butgu.mongodb.net:27017,nostroflix-shard-00-01-butgu.mongodb.net:27017,nostroflix-shard-00-02-butgu.mongodb.net:27017/test?ssl=true&replicaSet=nostroflix-shard-0&authSource=admin&retryWrites=true',
-//     {
-//         useNewUrlParser: true
-//     });
+ /*mongoose.connect(
+     'mongodb://mounach:' +
+     process.env.MONGO_ATLAS_PASSWORD + 
+     '@nostroflix-shard-00-00-butgu.mongodb.net:27017,nostroflix-shard-00-01-butgu.mongodb.net:27017,nostroflix-shard-00-02-butgu.mongodb.net:27017/test?ssl=true&replicaSet=nostroflix-shard-0&authSource=admin&retryWrites=true',
+     {
+         useNewUrlParser: true
+     });*/
 
 mongoose.connect(
     'mongodb://localhost/nostroflix',
