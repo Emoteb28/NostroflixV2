@@ -13,8 +13,8 @@ router.get('/:id', categorieController.getOne);
 //----post----
 router.post('/', categorieController.newCategorie);
 
-//----put-----
-router.put('/:id', categorieController.updateCategorie);
+//----patch-----
+router.patch('/:id', categorieController.updateCategorie);
 
 //----delete----
 router.delete('/:id', categorieController.deleteCategorie);

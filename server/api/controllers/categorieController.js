@@ -80,12 +80,7 @@ module.exports = {
             });
     },
     updateCategorie: async (req, res, next) => {
-        const id = req.params.id;
-        const updateOps = {};
-        for(const ops of req.body) {
-            updateOps[ops.propName] = ops.value;
-        }
-        Categorie.update({_id: id}, { $set: updateOps})
+        Categorie.findByIdAndUpdate(req.params.id, req.body)
             .exec()
             .then(result => {
                 res.status(200).json({
@@ -100,8 +95,7 @@ module.exports = {
             });
     },
     deleteCategorie: async (req, res, next) => {
-        const id = req.params.id;
-        Categorie.remove({_id: id})
+        Categorie.findByIdAndRemove(req.params.id)
             .exec()
             .then(result => {
                 res.status(200).json({
