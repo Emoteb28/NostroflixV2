@@ -1,11 +1,12 @@
 const Categorie = require('../models/categorie');
+const Film = require('../models/film');
 
 //---
 const mongoose = require('mongoose');
 
 module.exports = {
   getAll: async (req, res, next) => {
-    Categorie.find()
+    await Categorie.find()
         .select("_id name description films")
         .exec()
         .then(docs => {
@@ -31,7 +32,8 @@ module.exports = {
     },
     getOne: async (req, res, next) => {
         const id = req.params.id;
-        Categorie.findById(id)
+        await Categorie.findById(id)
+            .populate('films','_id name description')
             .select("_id name description films")
             .exec()
             .then(doc => {
@@ -59,7 +61,7 @@ module.exports = {
             films: []
         });
     
-        categorie
+        await categorie
             .save()
             .then(result => {
                 console.log(result);
@@ -80,7 +82,9 @@ module.exports = {
             });
     },
     updateCategorie: async (req, res, next) => {
-        Categorie.findByIdAndUpdate(req.params.id, req.body)
+        const oldCategorie = await Categorie.findById(req.params.id);
+
+        await Categorie.findByIdAndUpdate(req.params.id, req.body)
             .exec()
             .then(result => {
                 res.status(200).json({
@@ -93,13 +97,25 @@ module.exports = {
                     error: err
                 });
             });
+
+        const newCategorie = await Categorie.findById(req.params.id);
+        
+        //----------
+        for(const element of newCategorie.films){
+            const film = await Film.findById(element._id);
+            const categorie = film.categories.indexOf(oldCategorie);
+            film.categories[categorie] = newCategorie;
+            await film.save();
+        }
     },
     deleteCategorie: async (req, res, next) => {
-        Categorie.findByIdAndRemove(req.params.id)
+        const categorie = await Categorie.findById(req.params.id);
+        await Categorie.findByIdAndRemove(req.params.id)
             .exec()
             .then(result => {
                 res.status(200).json({
-                    message: 'Categorie deleted'
+                    message: 'Categorie deleted',
+                    deletedCategorie: result
                 });
             })
             .catch(err => {
@@ -108,5 +124,12 @@ module.exports = {
                     error: err
                 });
             });
+
+        //----------
+         for(const element of categorie.films){
+            const film = await Film.findById(element._id);
+            film.categories.pull(categorie);
+            await film.save();
+        }
     }
   };

@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 
 module.exports = {
   getAll: async (req, res, next) => {
-    Film.find()
+    await Film.find()
         .populate('categories','_id name description')
         .select("_id name description categories")
         .exec()
@@ -33,7 +33,7 @@ module.exports = {
     },
     getOne: async (req, res, next) => {
         const id = req.params.id;
-        Film.findById(id)
+        await Film.findById(id)
             .populate('categories','_id name description')
             .select("_id name description categories")
             .exec()
@@ -62,7 +62,7 @@ module.exports = {
             categories: req.body.categories
         });
     
-        film
+        await film
             .save()
             .then(result => {
                 console.log(result);
@@ -102,7 +102,9 @@ module.exports = {
             
     },
     updateFilm: async (req, res, next) => {
-        Film.findByIdAndUpdate(req.params.id, req.body)
+        const oldFilm = await Film.findById(req.params.id);
+
+        await Film.findByIdAndUpdate(req.params.id, req.body)
             .exec()
             .then(result => {
                 res.status(200).json({
@@ -115,13 +117,25 @@ module.exports = {
                     error: err
                 });
             });
+
+        const newFilm = await Film.findById(req.params.id);
+
+        //----------
+        for(const element of newFilm.categories){
+            const categorie = await Categorie.findById(element._id);
+            const film = categorie.films.indexOf(oldFilm);
+            categorie.films[film] = newFilm;
+            await categorie.save();
+        }
     },
     deleteFilm: async (req, res, next) => {
-        Film.findByIdAndRemove(req.params.id)
+        const film = await Film.findById(req.params.id);
+        await Film.findByIdAndRemove(req.params.id)
             .exec()
             .then(result => {
                 res.status(200).json({
-                    message: 'Film deleted'
+                    message: 'Film deleted',
+                    deletedFilm: result
                 });
             })
             .catch(err => {
@@ -130,5 +144,11 @@ module.exports = {
                     error: err
                 });
             });
+            //-----
+            for(const element of film.categories){
+                const categorie = await Categorie.findById(element._id);
+                categorie.films.pull(film);
+                await categorie.save();
+            }
     }
   };
